@@ -45,6 +45,7 @@ export class EmailService {
       `,
     };
 
+    console.log(mailOptions);
     return await this.transpoter.sendMail(mailOptions);
   }
 }

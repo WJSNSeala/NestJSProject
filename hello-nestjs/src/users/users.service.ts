@@ -37,7 +37,7 @@ export class UsersService {
       password,
       signupVerifyToken,
     );
-    // await this.sendMemberJoinEmail(email, signupVerifyToken);
+    await this.sendMemberJoinEmail(email, signupVerifyToken);
   }
 
   private async checkUserExists(emailAddress: string): Promise<boolean> {
@@ -67,6 +67,7 @@ export class UsersService {
       user.signupVerifyToken = signupVerifyToken;
       await queryRunner.manager.save(user);
       await queryRunner.commitTransaction();
+      console.log('db save end');
     } catch (e) {
       await queryRunner.rollbackTransaction();
     } finally {
@@ -75,6 +76,7 @@ export class UsersService {
   }
 
   private async sendMemberJoinEmail(email: string, signupVerifyToken: string) {
+    console.log(`${email} : ${signupVerifyToken}`);
     await this.emailService.sendMemberJoinVerification(
       email,
       signupVerifyToken,
@@ -102,14 +104,32 @@ export class UsersService {
     // TODO
     // 1. email, password를 가진 유저가 존재하는지 DB에서 확인하고 없다면 에러 처리
     // 2. JWT를 발급
+    const user = await this.usersRepository.findOneBy({ email, password });
 
-    throw new Error('Method not implemented.');
+    if (user === null) {
+      throw new NotFoundException('user does not exist');
+    }
+
+    return this.authService.login({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async getUserInfo(userId: string): Promise<UserInfo> {
     // 1. userId를 가진 유저가 존재하는지 DB에서 확인하고 없다면 에러 처리
     // 2. 조회된 데이터를 UserInfo 타입으로 응답
+    const user = await this.usersRepository.findOneBy({ id: userId });
 
-    throw new Error('Method not implemented.');
+    if (user === null) {
+      throw new NotFoundException('user does not exist');
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   }
 }
