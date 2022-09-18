@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { ulid } from 'ulid';
 import { Connection } from 'typeorm';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +20,7 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private connection: Connection,
+    private authService: AuthService,
   ) {}
 
   async createUser(name: string, email: string, password: string) {
@@ -89,7 +91,11 @@ export class UsersService {
       throw new NotFoundException('user does not exist');
     }
 
-    return this.auth;
+    return this.authService.login({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async login(email: string, password: string): Promise<string> {
