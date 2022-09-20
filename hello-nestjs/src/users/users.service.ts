@@ -24,7 +24,6 @@ export class UsersService {
   ) {}
 
   async createUser(name: string, email: string, password: string) {
-    console.log(name, email, password);
     const userExist = await this.checkUserExists(email);
     if (userExist) {
       throw new UnprocessableEntityException('can not join by that email');
@@ -41,9 +40,7 @@ export class UsersService {
   }
 
   private async checkUserExists(emailAddress: string): Promise<boolean> {
-    console.log('email: ', emailAddress);
     const user = await this.usersRepository.findOneBy({ email: emailAddress });
-    console.log('find user: ', user);
     return user !== null;
   }
 
@@ -67,7 +64,6 @@ export class UsersService {
       user.signupVerifyToken = signupVerifyToken;
       await queryRunner.manager.save(user);
       await queryRunner.commitTransaction();
-      console.log('db save end');
     } catch (e) {
       await queryRunner.rollbackTransaction();
     } finally {
@@ -76,7 +72,6 @@ export class UsersService {
   }
 
   private async sendMemberJoinEmail(email: string, signupVerifyToken: string) {
-    console.log(`${email} : ${signupVerifyToken}`);
     await this.emailService.sendMemberJoinVerification(
       email,
       signupVerifyToken,

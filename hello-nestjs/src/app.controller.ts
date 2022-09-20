@@ -5,7 +5,10 @@ import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly appService: AppService,
+  ) {}
 
   @Get('/db-host-from-config')
   getDatabaseHostFromConfigService(): string {
@@ -14,8 +17,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    console.log(process.env.DATABAST_HOST);
-    console.log(process.env.NODE_ENV);
-    return process.env.DATABASE_HOST;
+    return this.appService.getHello();
   }
 }
