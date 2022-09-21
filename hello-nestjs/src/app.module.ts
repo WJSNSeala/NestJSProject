@@ -14,6 +14,12 @@ import {
   utilities as nestWinstonModuleUtilities,
   WinstonModule,
 } from 'nest-winston';
+import { ExceptionModule } from './exception/exception.module';
+import { BatchModule } from './schedule/batch.module';
+import { HealthCheckController } from './health-check/health-check.controller';
+import { TerminusModule } from '@nestjs/terminus';
+import { HttpModule } from '@nestjs/axios';
+import { DogHealthIndicator } from './health-check/dog.indicator';
 
 @Module({
   imports: [
@@ -29,7 +35,7 @@ import {
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '1111',
+      password: 'mysqlnestjs123*',
       database: 'test',
       entities: [UserEntity],
       synchronize: false,
@@ -50,8 +56,12 @@ import {
         }),
       ],
     }),
+    ExceptionModule,
+    BatchModule,
+    TerminusModule,
+    HttpModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, HealthCheckController],
+  providers: [AppService, HealthCheckController, DogHealthIndicator],
 })
 export class AppModule {}
