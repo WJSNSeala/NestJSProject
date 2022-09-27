@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   Controller,
   Get,
@@ -51,3 +52,9 @@ export class CatsController {
     return this.catsService.findOne(id);
   }
 }
+=======
+import { Controller } from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {}
+>>>>>>> e8039b035461638d1bf70e0564e80ce31f5e0446
