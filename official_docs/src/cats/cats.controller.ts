@@ -1,30 +1,31 @@
-<<<<<<< HEAD
 import {
   Controller,
   Get,
   Post,
   Body,
-  HttpException,
   HttpStatus,
   UseFilters,
   Param,
-  ParseIntPipe,
-  UsePipes,
+  UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { CreateCatDto } from './create-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './cats.interface';
 import { ForbiddenException } from 'src/exception/forbidden.exception';
 import { HttpExceptionFilter } from 'src/exception/http-exception.filter';
-import { JoiValidationPipe } from 'src/pipes/joi-schema-validation.pipe';
+import { ValidationPipe } from '../pipes/validation.pipe';
+import { ParseIntPipe } from '../pipes/parse-int.pipe';
+import { RolesGuard } from '../gurads/roles.guard';
 
 @Controller('cats')
+@UseGuards(RolesGuard)
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
   @Post()
-  @UsePipes(new JoiValidationPipe(createCatSchema))
-  async create(@Body() createCatDto: CreateCatDto) {
+  @SetMetadata('roles', ['admin'])
+  async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto) {
     this.catsService.create(createCatDto);
   }
 
@@ -41,20 +42,9 @@ export class CatsController {
 
   @Get(':id')
   async findOne(
-    @Param(
-      'id',
-      new ParseIntPipe({
-        errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
-      }),
-    )
+    @Param('id', new ParseIntPipe())
     id: number,
   ) {
     return this.catsService.findOne(id);
   }
 }
-=======
-import { Controller } from '@nestjs/common';
-
-@Controller('cats')
-export class CatsController {}
->>>>>>> e8039b035461638d1bf70e0564e80ce31f5e0446
