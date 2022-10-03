@@ -7,9 +7,6 @@ import { CatsService } from './cats/cats.service';
 import { ConfigModule } from './config/config.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRootAsync({}),
-  ],
   controllers: [AppController, CatsController],
   providers: [AppService, CatsService],
 })

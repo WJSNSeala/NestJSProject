@@ -1,28 +1,26 @@
-import { Injectable } from '@nestjs/common';
-
-export interface User {
-  userId: number;
-  username: string;
-  password: string;
-}
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import User from './user.entity';
+import CreateUserDto from '../dto/create-user.dto';
+import GetUserDto from '../dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    //hard coded user list
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  async getUserByName(username: string) {
+    const user: User = await this.usersRepository.findOne({
+      where: { username },
+    });
+    return user;
+  }
+  async create(userData: CreateUserDto) {
+    // 데이터 주고받기는 Dto
+    const newUser = this.usersRepository.create(userData);
+    await this.usersRepository.save(newUser);
+    return newUser;
   }
 }
