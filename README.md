@@ -8,3 +8,4 @@
 
 - `hello_nestjs` : nest 기능 테스트용 프로젝트
 - `official_docs` : Nestjs official docs playground
+- `typeorm-postgresql` : nestjs - postgresql connection by typeorm
