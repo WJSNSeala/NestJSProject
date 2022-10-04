@@ -31,23 +31,24 @@ export class PostController {
   }
 
   @Get()
-  findAll(@Param() params) {
+  async findAll(@Param() params) {
     console.log(params);
     return this.postService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return this.postService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  async update(@Param('id') id: number, @Body() updatePostDto: UpdatePostDto) {
+    await this.postService.update(id, updatePostDto);
+    return this.postService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.postService.remove(id);
   }
 }

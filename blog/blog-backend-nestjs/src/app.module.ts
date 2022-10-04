@@ -10,6 +10,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { PostModule } from './post/post.module';
 import { Post } from './post/entities/post.entity';
+import { CommentModule } from './comment/comment.module';
+import { Comment } from './comment/entities/comment.entity';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { Post } from './post/entities/post.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [User, Post],
+      entities: [User, Post, Comment],
       synchronize: true,
       logging: true,
     }),
@@ -30,6 +32,7 @@ import { Post } from './post/entities/post.entity';
     AuthModule,
     UsersModule,
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

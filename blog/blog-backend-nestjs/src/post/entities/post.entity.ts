@@ -5,21 +5,23 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import User from '../../users/user.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   body: string;
 
-  @Column('text', { array: true })
+  @Column('text', { nullable: true, array: true })
   tags: string[];
 
   @CreateDateColumn()
@@ -30,4 +32,10 @@ export class Post {
 
   @Column()
   username: string;
+
+  @OneToMany(() => Comment, (comment) => comment.post, {
+    eager: true,
+  })
+  @JoinColumn()
+  comments: Comment[];
 }

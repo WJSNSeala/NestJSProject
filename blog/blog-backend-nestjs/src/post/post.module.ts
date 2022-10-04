@@ -8,11 +8,12 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../auth/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Comment } from '../comment/entities/comment.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([Post]),
+    TypeOrmModule.forFeature([Post, Comment]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

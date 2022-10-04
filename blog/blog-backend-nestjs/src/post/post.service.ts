@@ -25,11 +25,16 @@ export class PostService {
     return this.postsRepository.findOneBy({ id });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    return await this.postsRepository.update(id, { ...updatePostDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number) {
+    return this.postsRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Post)
+      .where('id = :id', { id })
+      .execute();
   }
 }
